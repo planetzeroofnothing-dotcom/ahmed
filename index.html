@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معرض الترابيزة المضيئة</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f1115;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .store-container {
+            max-width: 1000px;
+            width: 100%;
+            background: #181b21;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .store-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .gallery-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-image-box {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #2a2e37;
+        }
+
+        .main-image-box img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 215, 0, 0.8);
+            color: #000;
+        }
+
+        .nav-prev {
+            right: 10px;
+        }
+
+        .nav-next {
+            left: 10px;
+        }
+
+        .thumbnails-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .thumbnail-item {
+            width: 100%;
+            height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: all 0.2s ease;
+        }
+
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-item.active, .thumbnail-item:hover {
+            border-color: #ffd700;
+            opacity: 1;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .product-description {
+            color: #a0a5b5;
+            line-height: 1.6;
+        }
+
+        .style-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .style-selector label {
+            color: #d1d5db;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .option-btn {
+            background: #252932;
+            color: #fff;
+            border: 1px solid #3a3f4d;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn.active, .option-btn:hover {
+            background: #ffd700;
+            color: #000;
+            border-color: #ffd700;
+        }
+
+        .user-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .user-inputs input {
+            background: #252932;
+            border: 1px solid #3a3f4d;
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .user-inputs input:focus {
+            border-color: #ffd700;
+        }
+
+        .buy-button {
+            background: #25d366;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .buy-button:hover {
+            background: #1eb954;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="store-container">
+        <!-- المعرض -->
+        <div class="gallery-section">
+            <div class="main-image-box">
+                <button class="nav-arrow nav-prev" onclick="prevSlide()">❮</button>
+                <img id="mainImage" src="" alt="عرض الترابيزة">
+                <button class="nav-arrow nav-next" onclick="nextSlide()">❯</button>
+            </div>
+            <div class="thumbnails-grid" id="thumbnailContainer">
+            </div>
+        </div>
+
+        <!-- معلومات المنتج والطلب -->
+        <div class="product-info">
+            <h1 class="product-title">ترابيزة اللانهاية المضيئة</h1>
+            <p class="product-description">
+                طاولة شاي وإضاءة مودرن بتصميم عكس الإضاءة اللانهائي اختر الشكل الداخلي واكتب بياناتك للطلب المباشر عبر الواتساب
+            </p>
+
+            <div class="style-selector">
+                <label>اختر الشكل الداخلي:</label>
+                <div class="btn-group" id="btnContainer">
+                </div>
+            </div>
+
+            <!-- نموذج بيانات العميل -->
+            <div class="user-inputs">
+                <input type="text" id="custName" placeholder="الاسم بالكامل" required>
+                <input type="text" id="custAddress" placeholder="العنوان والتفاصيل" required>
+            </div>
+
+            <button class="buy-button" onclick="sendToWhatsApp()">
+                طلب الآن عبر واتساب 💬
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: "واحة نباتية",
+                image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                name: "تصميم مائي",
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 3,
+                name: "حديقة زين",
+                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 4,
+                name: "آليات ميكانيكية",
+                image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 5,
+                name: "مكتبة صغيرة",
+                image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        let currentIndex = 0;
+        const mainImage = document.getElementById('mainImage');
+        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        const btnContainer = document.getElementById('btnContainer');
+
+        function loadStore() {
+            mainImage.src = products[0].image;
+
+            products.forEach((item, index) => {
+                const thumb = document.createElement('div');
+                thumb.className = `thumbnail-item ${index === 0 ? 'active' : ''}`;
+                thumb.innerHTML = `<img src="${item.image}" alt="${item.name}">`;
+                thumb.onclick = () => selectProduct(index);
+                thumbnailContainer.appendChild(thumb);
+
+                const btn = document.createElement('button');
+                btn.className = `option-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = item.name;
+                btn.onclick = () => selectProduct(index);
+                btnContainer.appendChild(btn);
+            });
+        }
+
+        function selectProduct(index) {
+            currentIndex = index;
+            mainImage.src = products[currentIndex].image;
+
+            document.querySelectorAll('.thumbnail-item').forEach((el, i) => {
+                el.classList.toggle('active', i === currentIndex);
+            });
+
+            document.querySelectorAll('.option-btn').forEach((el, i) => {
+                el.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % products.length;
+            selectProduct(currentIndex);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + products.length) % products.length;
+            selectProduct(currentIndex);
+        }
+
+        function sendToWhatsApp() {
+            const name = document.getElementById('custName').value.trim();
+            const address = document.getElementById('custAddress').value.trim();
+            const selectedStyle = products[currentIndex].name;
+
+            if (!name || !address) {
+                alert('يرجى إدخال الاسم والعنوان قبل إرسال الطلب');
+                return;
+            }
+
+            const phoneNumber = "201280414299";
+            const message = `مرحبا، أريد طلب ترابيزة اللانهاية المضيئة
+*الشكل الداخلي المطلوب:* ${selectedStyle}
+*الاسم:* ${name}
+*العنوان:* ${address}`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
+        }
+
+        loadStore();
+    </script>
+
+</body>
+</html>
