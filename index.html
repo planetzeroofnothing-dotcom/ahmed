@@ -708,8 +708,8 @@
 
         let finalAltPhone = noAlt ? "لا يوجد" : (altPhone || "غير محدد");
 
-        const waNumber = "201000000000";
-        const text = `مرحباً أود طلب ترابيزة اللانهاية المضيئة%0A%0A*الموديل:* ${selectedProduct}%0A*السعر:* 2800 ج.م%0A%0A*الاسم:* ${name}%0A*رقم التليفون:* ${phone}%0A*رقم بديل:* ${finalAltPhone}%0A*المحافظة:* ${gov}%0A*العنوان:* ${address}%0A*معلومات إضافية:* ${notes || "لا يوجد"}`;
+        const waNumber = "201280414299";
+        const text = `مرحباً أود طلب ترابيزة اللانهاية المضيئة%0A%0A*الموديل:* ${selectedProduct}%0A*السعر:* 2800 ج.م%0A%0A*الاسم:* ${name}%0A*رقم التليفون:* ${phone}%0A*رقم بديل:* ${finalAltPhone}%0A*المافظة:* ${gov}%0A*العنوان:* ${address}%0A*معلومات إضافية:* ${notes || "لا يوجد"}`;
         
         window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
     }
