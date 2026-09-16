@@ -3,154 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معرض الترابيزة المضيئة</title>
+    <title>Hafez - معرض الترابيزة المضيئة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #0f1115;
+            background-color: #121214;
             color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px 10px;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .store-container {
-            max-width: 1000px;
+        #cursor-glow {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.12) 0%, rgba(255, 204, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            transition: transform 0.05s ease-out;
+        }
+
+        .container {
+            max-width: 1100px;
             width: 100%;
-            background: #181b21;
+            background-color: #1a1a1e;
             border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(255, 204, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+            animation: containerSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @media (max-width: 768px) {
-            .store-container {
-                grid-template-columns: 1fr;
+        @keyframes containerSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
 
-        .gallery-section {
+        .brand-logo {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffcc00;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #2a2a30;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+        }
+
+        .gallery-container {
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .main-image-box {
             position: relative;
             width: 100%;
-            padding-top: 100%;
+            height: auto;
+            min-height: 380px;
+            background-color: #0d0d0f;
             border-radius: 12px;
             overflow: hidden;
-            border: 2px solid #2a2e37;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #2a2a30;
         }
 
         .main-image-box img {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease;
+            object-fit: contain;
+            transition: opacity 0.3s ease, transform 0.5s ease;
+        }
+
+        .main-image-box:hover img {
+            transform: scale(1.02);
         }
 
         .nav-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            color: #fff;
+            background: rgba(0,0,0,0.6);
+            color: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            font-size: 20px;
             cursor: pointer;
-            z-index: 10;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s ease;
+            transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .nav-arrow:hover {
-            background: rgba(255, 215, 0, 0.8);
+            background: #ffcc00;
             color: #000;
+            transform: translateY(-50%) scale(1.15);
         }
 
-        .nav-prev {
-            right: 10px;
-        }
-
-        .nav-next {
-            left: 10px;
-        }
+        .nav-prev { left: 10px; }
+        .nav-next { right: 10px; }
 
         .thumbnails-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            display: flex;
             gap: 10px;
+            overflow-x: auto;
+            padding: 5px 2px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .thumbnail-item {
-            width: 100%;
-            height: 70px;
+        .thumb-item {
+            width: 75px;
+            height: 75px;
             border-radius: 8px;
             overflow: hidden;
-            border: 2px solid transparent;
             cursor: pointer;
+            border: 2px solid transparent;
             opacity: 0.6;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
         }
 
-        .thumbnail-item img {
+        .thumb-item.active, .thumb-item:hover {
+            border-color: #ffcc00;
+            opacity: 1;
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 6px 12px rgba(255, 204, 0, 0.25);
+        }
+
+        .thumb-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .thumbnail-item.active, .thumbnail-item:hover {
-            border-color: #ffd700;
-            opacity: 1;
-        }
-
         .product-info {
+            width: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            gap: 15px;
+            gap: 18px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .product-title {
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 24px;
             color: #ffffff;
+            font-weight: bold;
+        }
+
+        .price-badge {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(255, 204, 0, 0.1);
+            border: 1px dashed #ffcc00;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .price-val {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .shipping-tag {
+            font-size: 13px;
+            color: #25d366;
+            font-weight: 600;
+        }
+
+        .video-btn {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            white-space: nowrap;
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.3);
+            animation: pulseGlow 2s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 18px rgba(255, 204, 0, 0.8); transform: scale(1.02); }
+            100% { box-shadow: 0 0 5px rgba(255, 204, 0, 0.4); transform: scale(1); }
+        }
+
+        .video-btn:hover {
+            background: #ffe066;
+            transform: translateY(-2px);
         }
 
         .product-description {
-            color: #a0a5b5;
-            line-height: 1.6;
-        }
-
-        .style-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            color: #aaa;
+            line-height: 1.5;
+            font-size: 14px;
         }
 
         .style-selector label {
-            color: #d1d5db;
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .btn-group {
@@ -159,203 +266,459 @@
             gap: 8px;
         }
 
-        .option-btn {
-            background: #252932;
-            color: #fff;
-            border: 1px solid #3a3f4d;
+        .style-btn {
             padding: 8px 14px;
-            border-radius: 6px;
+            background-color: #26262c;
+            border: 1px solid #3a3a42;
+            color: #fff;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-size: 13px;
         }
 
-        .option-btn.active, .option-btn:hover {
-            background: #ffd700;
+        .style-btn:hover {
+            border-color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .style-btn.active {
+            background-color: #ffcc00;
             color: #000;
-            border-color: #ffd700;
+            font-weight: bold;
+            border-color: #ffcc00;
+            box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
         }
 
         .user-inputs {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-top: 10px;
         }
 
-        .user-inputs input {
-            background: #252932;
-            border: 1px solid #3a3f4d;
-            color: #fff;
+        .user-inputs input, .user-inputs select {
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
+            border: 1px solid #3a3a42;
+            background-color: #26262c;
+            color: #fff;
             font-size: 14px;
             outline: none;
+            transition: all 0.3s ease;
+            width: 100%;
         }
 
-        .user-inputs input:focus {
-            border-color: #ffd700;
+        .user-inputs input:focus, .user-inputs select:focus {
+            border-color: #ffcc00;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.25);
+            background-color: #2d2d35;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #bbb;
+            cursor: pointer;
+            user-select: none;
+            margin-top: -2px;
+        }
+
+        .checkbox-container input {
+            width: auto;
+            cursor: pointer;
+            accent-color: #ffcc00;
         }
 
         .buy-button {
-            background: #25d366;
-            color: #fff;
+            padding: 15px;
+            background-color: #25d366;
+            color: #ffffff;
             border: none;
-            padding: 14px;
-            font-size: 18px;
-            font-weight: bold;
             border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s ease;
-            margin-top: 10px;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .buy-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(60deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(30deg);
+            transition: 0.8s;
+        }
+
+        .buy-button:hover::after {
+            left: 100%;
         }
 
         .buy-button:hover {
-            background: #1eb954;
+            background-color: #1ebd59;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 15px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            background: #1a1a1e;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 25px rgba(255, 204, 0, 0.25);
+            border: 1px solid #3a3a42;
+            transform: scale(0.7) translateY(50px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            border: 2px solid #ffffff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 32px;
+            line-height: 1;
+            cursor: pointer;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .close-btn:hover {
+            background: #ff3333;
+            border-color: #ff3333;
+            transform: scale(1.15) rotate(90deg);
+        }
+
+        .modal-content video {
+            width: 100%;
+            max-height: 70vh;
+            display: block;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .brand-logo {
+                font-size: 22px;
+            }
+            .main-image-box {
+                min-height: 260px;
+            }
+            .product-title {
+                font-size: 20px;
+            }
+            .price-val {
+                font-size: 18px;
+            }
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .video-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            #cursor-glow {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="store-container">
-        <!-- المعرض -->
-        <div class="gallery-section">
-            <div class="main-image-box">
-                <button class="nav-arrow nav-prev" onclick="prevSlide()">❮</button>
-                <img id="mainImage" src="" alt="عرض الترابيزة">
-                <button class="nav-arrow nav-next" onclick="nextSlide()">❯</button>
-            </div>
-            <div class="thumbnails-grid" id="thumbnailContainer">
-            </div>
+<div id="cursor-glow"></div>
+
+<div class="container">
+    <div class="brand-logo">Hafez</div>
+
+    <div class="gallery-container">
+        <div class="main-image-box">
+            <button class="nav-arrow nav-prev" onclick="prevSlide()">&#10094;</button>
+            <img id="mainImage" src="" alt="عرض الترابيزة">
+            <button class="nav-arrow nav-next" onclick="nextSlide()">&#10095;</button>
         </div>
-
-        <!-- معلومات المنتج والطلب -->
-        <div class="product-info">
-            <h1 class="product-title">ترابيزة اللانهاية المضيئة</h1>
-            <p class="product-description">
-                طاولة شاي وإضاءة مودرن بتصميم عكس الإضاءة اللانهائي اختر الشكل الداخلي واكتب بياناتك للطلب المباشر عبر الواتساب
-            </p>
-
-            <div class="style-selector">
-                <label>اختر الشكل الداخلي:</label>
-                <div class="btn-group" id="btnContainer">
-                </div>
-            </div>
-
-            <!-- نموذج بيانات العميل -->
-            <div class="user-inputs">
-                <input type="text" id="custName" placeholder="الاسم بالكامل" required>
-                <input type="text" id="custAddress" placeholder="العنوان والتفاصيل" required>
-            </div>
-
-            <button class="buy-button" onclick="sendToWhatsApp()">
-                طلب الآن عبر واتساب 💬
-            </button>
-        </div>
+        <div class="thumbnails-grid" id="thumbnailContainer"></div>
     </div>
 
-    <script>
-        const products = [
-            {
-                id: 1,
-                name: "واحة نباتية",
-                image: "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 2,
-                name: "تصميم مائي",
-                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 3,
-                name: "حديقة زين",
-                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 4,
-                name: "آليات ميكانيكية",
-                image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 5,
-                name: "مكتبة صغيرة",
-                image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80"
-            }
-        ];
+    <div class="product-info">
+        <div class="header-actions">
+            <div>
+                <h1 class="product-title">ترابيزة اللانهاية المضيئة</h1>
+            </div>
+            <button class="video-btn" onclick="openVideoModal()">
+                🎬 فيديو المنتج
+            </button>
+        </div>
 
-        let currentIndex = 0;
-        const mainImage = document.getElementById('mainImage');
-        const thumbnailContainer = document.getElementById('thumbnailContainer');
+        <div class="price-badge">
+            <div class="price-val">السعر: 2800 ج.م</div>
+            <div class="shipping-tag">🚚 توصيل مجاني داخل الإسكندرية</div>
+        </div>
+
+        <p class="product-description">
+            طاولة شاي وإضاءة مودرن بتصميم عكس الإضاءة اللانهائي اختر الشكل الداخلي واكتب بياناتك للطلب المباشر عبر الواتساب
+        </p>
+
+        <div class="style-selector">
+            <label>اختر الشكل الداخلي</label>
+            <div class="btn-group" id="btnContainer"></div>
+        </div>
+
+        <div class="user-inputs">
+            <input type="text" id="custName" placeholder="الاسم بالكامل" required>
+            <input type="tel" id="custPhone" placeholder="رقم التليفون" required>
+            
+            <input type="tel" id="custAltPhone" placeholder="رقم تليفون بديل">
+            <label class="checkbox-container">
+                <input type="checkbox" id="noAltPhone" onchange="toggleAltPhone(this)">
+                لا يوجد رقم تليفون بديل
+            </label>
+
+            <select id="custGov" required>
+                <option value="الإسكندرية">الإسكندرية (توصيل مجاني)</option>
+                <option value="القاهرة">القاهرة</option>
+                <option value="الجيزة">الجيزة</option>
+                <option value="البحيرة">البحيرة</option>
+                <option value="الغربية">الغربية</option>
+                <option value="الشرقية">الشرقية</option>
+                <option value="الدقهلية">الدقهلية</option>
+                <option value="القليوبية">القليوبية</option>
+                <option value="المنوفية">المنوفية</option>
+                <option value="محافظة أخرى">محافظة أخرى</option>
+            </select>
+
+            <input type="text" id="custAddress" placeholder="العنوان تفصيلياً" required>
+            <input type="text" id="custNotes" placeholder="معلومات إضافية للعنوان (علامة مميزة)">
+        </div>
+
+        <button class="buy-button" onclick="sendToWhatsApp()">
+            طلب الآن عبر واتساب
+        </button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="videoModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeVideoModal()">&times;</button>
+        <video id="popupVideo" controls playsinline onended="closeVideoModal()">
+            <source src="promo.mp4" type="video/mp4">
+        </video>
+    </div>
+</div>
+
+<script>
+    const products = [
+        { id: 1, name: "أخضر عادي", image: "table-1.jpg" },
+        { id: 2, name: "نبيتي", image: "table-2.jpg" },
+        { id: 3, name: "أبيض", image: "table-3.jpg" },
+        { id: 4, name: "وايت", image: "table-4.jpg" },
+        { id: 5, name: "أزرق", image: "table-5.jpg" },
+        { id: 6, name: "أوف وايت", image: "table-6.jpg" },
+        { id: 7, name: "أخضر غامق", image: "table-7.jpg" }
+    ];
+
+    let currentIndex = 0;
+
+    function playClickSound() {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    const glow = document.getElementById('cursor-glow');
+    window.addEventListener('mousemove', (e) => {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+    });
+
+    function initGallery() {
+        const thumbContainer = document.getElementById('thumbnailContainer');
         const btnContainer = document.getElementById('btnContainer');
 
-        function loadStore() {
-            mainImage.src = products[0].image;
+        thumbContainer.innerHTML = '';
+        btnContainer.innerHTML = '';
 
-            products.forEach((item, index) => {
-                const thumb = document.createElement('div');
-                thumb.className = `thumbnail-item ${index === 0 ? 'active' : ''}`;
-                thumb.innerHTML = `<img src="${item.image}" alt="${item.name}">`;
-                thumb.onclick = () => selectProduct(index);
-                thumbnailContainer.appendChild(thumb);
+        products.forEach((prod, index) => {
+            const thumb = document.createElement('div');
+            thumb.className = `thumb-item ${index === currentIndex ? 'active' : ''}`;
+            thumb.onclick = () => selectProduct(index);
+            thumb.innerHTML = `<img src="${prod.image}" alt="${prod.name}">`;
+            thumbContainer.appendChild(thumb);
 
-                const btn = document.createElement('button');
-                btn.className = `option-btn ${index === 0 ? 'active' : ''}`;
-                btn.innerText = item.name;
-                btn.onclick = () => selectProduct(index);
-                btnContainer.appendChild(btn);
+            const btn = document.createElement('button');
+            btn.className = `style-btn ${index === currentIndex ? 'active' : ''}`;
+            btn.innerText = prod.name;
+            btn.onclick = () => selectProduct(index);
+            btnContainer.appendChild(btn);
+        });
+
+        updateMainImage();
+    }
+
+    function updateMainImage() {
+        const mainImg = document.getElementById('mainImage');
+        mainImg.style.opacity = '0';
+        setTimeout(() => {
+            mainImg.src = products[currentIndex].image;
+            mainImg.style.opacity = '1';
+        }, 150);
+
+        document.querySelectorAll('.thumb-item').forEach((el, idx) => {
+            el.classList.toggle('active', idx === currentIndex);
+        });
+        document.querySelectorAll('.style-btn').forEach((el, idx) => {
+            el.classList.toggle('active', idx === currentIndex);
+        });
+    }
+
+    function selectProduct(index) {
+        playClickSound();
+        currentIndex = index;
+        updateMainImage();
+    }
+
+    function nextSlide() {
+        playClickSound();
+        currentIndex = (currentIndex + 1) % products.length;
+        updateMainImage();
+    }
+
+    function prevSlide() {
+        playClickSound();
+        currentIndex = (currentIndex - 1 + products.length) % products.length;
+        updateMainImage();
+    }
+
+    function toggleAltPhone(checkbox) {
+        playClickSound();
+        const altInput = document.getElementById('custAltPhone');
+        if (checkbox.checked) {
+            altInput.value = '';
+            altInput.disabled = true;
+            altInput.style.opacity = '0.4';
+        } else {
+            altInput.disabled = false;
+            altInput.style.opacity = '1';
+        }
+    }
+
+    function openVideoModal() {
+        playClickSound();
+        const modal = document.getElementById('videoModal');
+        const video = document.getElementById('popupVideo');
+        modal.classList.add('active');
+        
+        video.currentTime = 0;
+        video.muted = false;
+        
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                video.muted = true;
+                video.play();
             });
         }
+    }
 
-        function selectProduct(index) {
-            currentIndex = index;
-            mainImage.src = products[currentIndex].image;
+    function closeVideoModal() {
+        playClickSound();
+        const modal = document.getElementById('videoModal');
+        const video = document.getElementById('popupVideo');
+        modal.classList.remove('active');
+        video.pause();
+    }
 
-            document.querySelectorAll('.thumbnail-item').forEach((el, i) => {
-                el.classList.toggle('active', i === currentIndex);
-            });
+    function sendToWhatsApp() {
+        playClickSound();
+        const name = document.getElementById('custName').value.trim();
+        const phone = document.getElementById('custPhone').value.trim();
+        const altPhone = document.getElementById('custAltPhone').value.trim();
+        const noAlt = document.getElementById('noAltPhone').checked;
+        const gov = document.getElementById('custGov').value;
+        const address = document.getElementById('custAddress').value.trim();
+        const notes = document.getElementById('custNotes').value.trim();
+        const selectedProduct = products[currentIndex].name;
 
-            document.querySelectorAll('.option-btn').forEach((el, i) => {
-                el.classList.toggle('active', i === currentIndex);
-            });
+        if (!name || !phone || !address) {
+            alert('برجاء ملء البيانات الأساسية: الاسم، رقم التليفون، والعنوان');
+            return;
         }
 
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % products.length;
-            selectProduct(currentIndex);
-        }
+        let finalAltPhone = noAlt ? "لا يوجد" : (altPhone || "غير محدد");
 
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + products.length) % products.length;
-            selectProduct(currentIndex);
-        }
+        const waNumber = "201000000000";
+        const text = `مرحباً أود طلب ترابيزة اللانهاية المضيئة%0A%0A*الموديل:* ${selectedProduct}%0A*السعر:* 2800 ج.م%0A%0A*الاسم:* ${name}%0A*رقم التليفون:* ${phone}%0A*رقم بديل:* ${finalAltPhone}%0A*المحافظة:* ${gov}%0A*العنوان:* ${address}%0A*معلومات إضافية:* ${notes || "لا يوجد"}`;
+        
+        window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
+    }
 
-        function sendToWhatsApp() {
-            const name = document.getElementById('custName').value.trim();
-            const address = document.getElementById('custAddress').value.trim();
-            const selectedStyle = products[currentIndex].name;
-
-            if (!name || !address) {
-                alert('يرجى إدخال الاسم والعنوان قبل إرسال الطلب');
-                return;
-            }
-
-            const phoneNumber = "201280414299";
-            const message = `مرحبا، أريد طلب ترابيزة اللانهاية المضيئة
-*الشكل الداخلي المطلوب:* ${selectedStyle}
-*الاسم:* ${name}
-*العنوان:* ${address}`;
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-            window.open(whatsappUrl, '_blank');
-        }
-
-        loadStore();
-    </script>
+    window.onload = () => {
+        initGallery();
+        openVideoModal();
+    };
+</script>
 
 </body>
 </html>
